@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashish Ranjan | Cybersecurity Researcher & VAPT Practitioner</title>
+    <meta name="description" content="Cybersecurity researcher and builder of VulnSage. Web, API and application security assessments with automated reconnaissance and manual verification.">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        blue: {
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        },
+                        cyan: {
+                            600: '#0284c7',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+        
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(37, 99, 235, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
+        }
+
+        .enterprise-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .enterprise-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-blue-600 selection:text-white">
+
+    <!-- Sticky Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-xl border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Brand / Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-600 flex items-center justify-center shadow-lg shadow-blue-600/20 font-mono font-bold text-white text-lg">
+                        AR
+                    </div>
+                    <div>
+                        <a href="#home" class="font-bold text-lg tracking-tight text-slate-900 flex items-center gap-2">
+                            Ashish Ranjan
+                            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 hidden sm:inline-block">VAPT & AI</span>
+                        </a>
+                        <p class="text-[11px] text-slate-500 font-mono">Security Researcher / VulnSage Builder</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-7 font-medium text-sm">
+                    <a href="#about" class="text-slate-600 hover:text-blue-600 transition-colors">About</a>
+                    <a href="#vulnsage" class="text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+                        VulnSage
+                    </a>
+                    <a href="#services" class="text-slate-600 hover:text-blue-600 transition-colors">Services</a>
+                    <a href="#process" class="text-slate-600 hover:text-blue-600 transition-colors">How I Work</a>
+                    <a href="#research" class="text-slate-600 hover:text-blue-600 transition-colors">Research</a>
+                    <a href="#projects" class="text-slate-600 hover:text-blue-600 transition-colors">Projects</a>
+                    <a href="#contact" class="text-slate-600 hover:text-blue-600 transition-colors">Contact</a>
+                </div>
+
+                <!-- Primary CTA Button -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button onclick="openAssessmentModal()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-md shadow-blue-600/20 flex items-center gap-2">
+                        Request Assessment
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" onclick="toggleMobileMenu()" class="text-slate-600 hover:text-slate-900 p-2 focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-3 shadow-lg">
+            <a href="#about" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">About</a>
+            <a href="#vulnsage" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">VulnSage</a>
+            <a href="#services" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">Services</a>
+            <a href="#process" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">How I Work</a>
+            <a href="#research" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">Research</a>
+            <a href="#projects" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">Projects</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">Contact</a>
+            <div class="pt-2">
+                <button onclick="openAssessmentModal(); toggleMobileMenu();" class="w-full text-center py-3 rounded-xl bg-blue-600 text-white font-semibold">
+                    Request Assessment
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen pt-32 pb-20 flex items-center bg-grid-pattern overflow-hidden">
+        <!-- Background Glow Orbs -->
+        <div class="absolute top-1/4 left-10 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-1/4 right-10 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Content -->
+                <div class="lg:col-span-7 space-y-8">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-mono font-medium">
+                        <span class="w-2 h-2 rounded-full bg-blue-600 animate-ping"></span>
+                        Authorized VAPT & Security Assessments Available
+                    </div>
+
+                    <!-- Headline -->
+                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
+                        I Find Security Vulnerabilities <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Before Attackers Do.</span>
+                    </h1>
+
+                    <!-- Subheadline -->
+                    <p class="text-lg sm:text-xl text-slate-600 font-normal leading-relaxed">
+                        I'm <strong class="text-slate-900 font-semibold">Ashish Ranjan</strong> — a cybersecurity practitioner and the builder of <span class="text-blue-600 font-semibold">VulnSage</span>, an AI-powered VAPT platform for reconnaissance, vulnerability discovery, verification, and security reporting.
+                    </p>
+
+                    <!-- Credibility Line -->
+                    <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm font-mono text-slate-700 bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                        <span class="text-blue-600 flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Manual Verification</span>
+                        <span class="text-slate-300">•</span>
+                        <span class="text-cyan-600 flex items-center gap-1.5"><i data-lucide="cpu" class="w-4 h-4"></i> Automated Recon</span>
+                        <span class="text-slate-300">•</span>
+                        <span class="text-indigo-600 flex items-center gap-1.5"><i data-lucide="file-text" class="w-4 h-4"></i> Evidence-Driven Reporting</span>
+                    </div>
+
+                    <!-- CTAs -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+                        <button onclick="openAssessmentModal()" class="px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-all shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2 group">
+                            Request a Security Assessment 
+                            <i data-lucide="arrow-right" class="w-5 h-5 transition-transform group-hover:translate-x-1"></i>
+                        </button>
+                        <a href="#vulnsage" class="px-8 py-4 rounded-xl bg-white border border-slate-300 hover:border-blue-500 text-slate-700 hover:text-blue-600 font-semibold text-base transition-all flex items-center justify-center gap-2 shadow-sm">
+                            Explore VulnSage
+                            <i data-lucide="shield" class="w-5 h-5 text-blue-600"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Side: Interactive Security Dashboard Widget -->
+                <div class="lg:col-span-5">
+                    <div class="enterprise-card rounded-2xl p-6 relative border border-slate-200 shadow-xl bg-white">
+                        <!-- Terminal Header -->
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                                <span class="ml-2 font-mono text-xs text-slate-500">vulnsage-core@vapt-engine:~</span>
+                            </div>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-blue-50 text-blue-700 border border-blue-200">
+                                ACTIVE SCAN
+                            </span>
+                        </div>
+
+                        <!-- Dashboard Grid Metrics -->
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <div class="text-xs text-slate-500 font-mono mb-1">Attack Surface</div>
+                                <div class="text-xl font-bold font-mono text-slate-900 flex items-center justify-between">
+                                    <span>142 Endpoints</span>
+                                    <i data-lucide="globe" class="w-4 h-4 text-cyan-600"></i>
+                                </div>
+                                <div class="text-[10px] text-blue-600 mt-1 font-mono">98 APIs • 44 Web Routes</div>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <div class="text-xs text-slate-500 font-mono mb-1">Risk Score</div>
+                                <div class="text-xl font-bold font-mono text-rose-600 flex items-center justify-between">
+                                    <span>7.8 / 10</span>
+                                    <i data-lucide="shield-alert" class="w-4 h-4 text-rose-600"></i>
+                                </div>
+                                <div class="text-[10px] text-rose-500 mt-1 font-mono">3 High • 5 Medium</div>
+                            </div>
+                        </div>
+
+                        <!-- CVSS Breakdown Bar -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                            <div class="flex justify-between text-xs font-mono text-slate-700 mb-2">
+                                <span>CVSS v3.1 Severity Spread</span>
+                                <span class="text-blue-600 font-bold">Verified Findings</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden flex">
+                                <div class="bg-rose-500 w-[25%]" title="Critical/High: 25%"></div>
+                                <div class="bg-amber-500 w-[50%]" title="Medium: 50%"></div>
+                                <div class="bg-blue-500 w-[25%]" title="Low: 25%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Live Terminal Ticker -->
+                        <div class="bg-slate-900 text-slate-200 p-3.5 rounded-xl font-mono text-xs border border-slate-800">
+                            <div class="text-blue-400 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                                <i data-lucide="terminal" class="w-3.5 h-3.5"></i> Live Security Telemetry Feed
+                            </div>
+                            <div id="terminal-ticker" class="text-slate-300 h-10 overflow-hidden relative">
+                                <p class="animate-pulse">[+] Enumerating OAuth2 callback parameters...</p>
+                            </div>
+                        </div>
+
+                        <!-- Footer indicator -->
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-mono">
+                            <span>Engine: VulnSage v2.4</span>
+                            <span class="text-blue-600 flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping"></span>
+                                Manual Verification Mode
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust / Credibility Strip -->
+    <section class="py-8 bg-white border-y border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm font-mono text-slate-700">
+                <span class="text-slate-400 text-xs uppercase tracking-wider hidden md:inline">Core Expertise:</span>
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-blue-500 transition-colors">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-blue-600"></i> VAPT
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-blue-500 transition-colors">
+                    <i data-lucide="globe" class="w-4 h-4 text-cyan-600"></i> Web Security
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-blue-500 transition-colors">
+                    <i data-lucide="cpu" class="w-4 h-4 text-indigo-600"></i> API Security
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-blue-500 transition-colors">
+                    <i data-lucide="radar" class="w-4 h-4 text-blue-600"></i> Reconnaissance
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-blue-500 transition-colors">
+                    <i data-lucide="search" class="w-4 h-4 text-cyan-600"></i> Vulnerability Research
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-blue-500 transition-colors">
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i> Security Automation
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-blue-500 transition-colors">
+                    <i data-lucide="bot" class="w-4 h-4 text-purple-600"></i> AI for Cybersecurity
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 relative bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-5 space-y-6">
+                    <!-- Profile Photo -->
+                    <div class="flex items-center gap-4">
+                        <div class="relative">
+                            <!-- PHOTO: Replace src below with your actual photo path e.g. src="ashish.jpg" -->
+                            <div id="profile-photo-container" class="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-600 flex items-center justify-center text-white font-bold text-3xl font-mono shadow-lg shadow-blue-600/20 border-2 border-white ring-4 ring-blue-100">
+                                AR
+                            </div>
+                            <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white"></span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-900">Ashish Ranjan</p>
+                            <p class="text-xs text-blue-600 font-mono">Cybersecurity Researcher</p>
+                            <p class="text-xs text-slate-500 font-mono">VulnSage Builder · VAPT Practitioner</p>
+                        </div>
+                    </div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                        <i data-lucide="user" class="w-3.5 h-3.5"></i> Profile & Background
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                        Security Researcher. <br/><span class="text-blue-600">Builder.</span> Problem Solver.
+                    </h2>
+                    <p class="text-slate-600 leading-relaxed text-base">
+                        I'm Ashish Ranjan, a cybersecurity-focused engineer and builder working at the intersection of offensive security, automation, and AI.
+                    </p>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        My focus is identifying real-world security weaknesses, validating them manually, understanding their impact, and turning technical findings into actionable remediation guidance for engineering teams.
+                    </p>
+                    <div class="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono text-slate-700 space-y-2 shadow-sm">
+                        <div class="text-blue-600 font-semibold flex items-center gap-1.5">
+                            <i data-lucide="graduation-cap" class="w-4 h-4"></i> Education & Academic Foundation
+                        </div>
+                        <p class="font-bold text-slate-900">B.Tech — Artificial Intelligence & Machine Learning</p>
+                        <p class="text-slate-500">Applying machine learning paradigms for automated vulnerability correlation, asset discovery heuristics, and threat modeling.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900">Cybersecurity & VAPT</h3>
+                        <p class="text-sm text-slate-500">
+                            Comprehensive penetration testing for web apps, APIs, and cloud infrastructure with strict adherence to OWASP guidelines.
+                        </p>
+                    </div>
+
+                    <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center text-cyan-600">
+                            <i data-lucide="cpu" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900">Security Automation</h3>
+                        <p class="text-sm text-slate-500">
+                            Building bespoke tooling, custom nuclei templates, and automated reconnaissance pipelines to reduce assessment overhead.
+                        </p>
+                    </div>
+
+                    <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900">Vulnerability Research</h3>
+                        <p class="text-sm text-slate-500">
+                            Deep analysis of access control flows, business logic flaws, and zero-day threat patterns through responsible disclosure.
+                        </p>
+                    </div>
+
+                    <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+                            <i data-lucide="bot" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900">AI-Powered Security Tooling</h3>
+                        <p class="text-sm text-slate-500">
+                            Creator of VulnSage — bridging the gap between LLM intelligence and rigorous manual penetration testing workflows.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- VulnSage Feature Section -->
+    <section id="vulnsage" class="py-24 bg-white border-y border-slate-200 relative overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="shield" class="w-3.5 h-3.5"></i> Flagship Platform
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
+                    VulnSage
+                </h2>
+                <p class="text-xl text-blue-600 font-mono">
+                    AI-Powered VAPT & Security Assessment Platform
+                </p>
+                <p class="text-slate-600 text-base leading-relaxed">
+                    VulnSage combines automated reconnaissance, vulnerability discovery, CVE correlation, security analysis, and reporting into a single workflow — with manual verification used to validate meaningful findings.
+                </p>
+            </div>
+
+            <!-- Workflow Pipeline -->
+            <div class="mb-16">
+                <div class="text-xs font-mono uppercase tracking-widest text-slate-400 text-center mb-6">Execution Pipeline Architecture</div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center relative shadow-sm">
+                        <div class="text-xs font-mono text-blue-600 mb-1">01</div>
+                        <div class="font-bold text-slate-900 text-sm">Recon</div>
+                        <div class="text-[10px] text-slate-500 mt-1">Attack Surface Mapping</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center relative shadow-sm">
+                        <div class="text-xs font-mono text-blue-600 mb-1">02</div>
+                        <div class="font-bold text-slate-900 text-sm">Enumeration</div>
+                        <div class="text-[10px] text-slate-500 mt-1">Endpoints & Services</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center relative shadow-sm">
+                        <div class="text-xs font-mono text-blue-600 mb-1">03</div>
+                        <div class="font-bold text-slate-900 text-sm">Detection</div>
+                        <div class="text-[10px] text-slate-500 mt-1">Vulnerability Scans</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center relative shadow-sm">
+                        <div class="text-xs font-mono text-blue-600 mb-1">04</div>
+                        <div class="font-bold text-slate-900 text-sm">Correlation</div>
+                        <div class="text-[10px] text-slate-500 mt-1">CVE & NVD Matching</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center relative shadow-sm">
+                        <div class="text-xs font-mono text-blue-600 mb-1">05</div>
+                        <div class="font-bold text-slate-900 text-sm">Verification</div>
+                        <div class="text-[10px] text-slate-500 mt-1">Manual Validation</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center relative shadow-sm">
+                        <div class="text-xs font-mono text-blue-600 mb-1">06</div>
+                        <div class="font-bold text-slate-900 text-sm">Risk Analysis</div>
+                        <div class="text-[10px] text-slate-500 mt-1">CVSS Scoring</div>
+                    </div>
+                    <div class="col-span-2 sm:col-span-4 lg:col-span-1">
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-center shadow-sm">
+                            <div class="text-xs font-mono text-blue-600 mb-1">07</div>
+                            <div class="font-bold text-blue-700 text-sm">Report</div>
+                            <div class="text-[10px] text-slate-600 mt-1">Executive & Tech</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-slate-50">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                        <i data-lucide="radar" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Automated Reconnaissance</h3>
+                    <p class="text-sm text-slate-500">
+                        Discover attack surface, technologies, endpoints and exposed services with recursive subdomain and asset enumeration.
+                    </p>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-slate-50">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center text-cyan-600">
+                        <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Vulnerability Discovery</h3>
+                    <p class="text-sm text-slate-500">
+                        Identify potential security weaknesses across web applications, APIs and cloud infrastructure using customized nuclei and fuzzing suites.
+                    </p>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-slate-50">
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+                        <i data-lucide="git-commit" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">CVE Correlation</h3>
+                    <p class="text-sm text-slate-500">
+                        Correlate discovered technologies and software versions with up-to-date vulnerability intelligence and exploit databases.
+                    </p>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-slate-50">
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                        <i data-lucide="bot" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">AI Security Analysis</h3>
+                    <p class="text-sm text-slate-500">
+                        Use AI to assist with prioritization, root-cause analysis and generating contextual security narratives.
+                    </p>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-slate-50">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                        <i data-lucide="user-check" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Manual Verification</h3>
+                    <p class="text-sm text-slate-500">
+                        Potential findings are manually validated before being treated as confirmed vulnerabilities to eliminate false positives.
+                    </p>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-slate-50">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Professional Reports</h3>
+                    <p class="text-sm text-slate-500">
+                        Generate evidence-based reports containing reproduction steps, impact, severity scoring and actionable remediation guidance.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="text-center">
+                <button onclick="openVulnSageModal()" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white border border-blue-300 text-blue-600 font-semibold hover:bg-blue-50 transition-all shadow-sm">
+                    Explore VulnSage Architecture & Live Demo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How I Work Section -->
+    <section id="process" class="py-24 bg-slate-50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="git-branch" class="w-3.5 h-3.5"></i> Assessment Methodology
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    A Security Assessment Built Around Verification
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Rigorous testing methodology combining automated reconnaissance with expert manual penetration testing.
+                </p>
+            </div>
+
+            <!-- 5-Step Process Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-16">
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                    <div class="text-3xl font-extrabold font-mono text-blue-600/30">01</div>
+                    <h3 class="text-lg font-bold text-slate-900">Scope</h3>
+                    <p class="text-sm text-slate-500">
+                        Define targets, authorization, dates, allowed techniques and exclusions before testing commences.
+                    </p>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                    <div class="text-3xl font-extrabold font-mono text-cyan-600/30">02</div>
+                    <h3 class="text-lg font-bold text-slate-900">Recon</h3>
+                    <p class="text-sm text-slate-500">
+                        Map the application's external attack surface and discover forgotten assets or endpoints.
+                    </p>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                    <div class="text-3xl font-extrabold font-mono text-indigo-600/30">03</div>
+                    <h3 class="text-lg font-bold text-slate-900">Test</h3>
+                    <p class="text-sm text-slate-500">
+                        Perform automated and manual security testing against web interfaces, APIs and business logic.
+                    </p>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                    <div class="text-3xl font-extrabold font-mono text-purple-600/30">04</div>
+                    <h3 class="text-lg font-bold text-slate-900">Verify</h3>
+                    <p class="text-sm text-slate-500">
+                        Reproduce and validate potential findings to eliminate false positives and confirm actual business risk.
+                    </p>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                    <div class="text-3xl font-extrabold font-mono text-blue-600/30">05</div>
+                    <h3 class="text-lg font-bold text-slate-900">Report</h3>
+                    <p class="text-sm text-slate-500">
+                        Deliver comprehensive evidence, impact ratings, severity scores and remediation guidance.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Positioning Statement -->
+            <div class="max-w-4xl mx-auto bg-gradient-to-r from-blue-50 via-cyan-50 to-blue-50 p-8 rounded-2xl border border-blue-200 text-center shadow-lg">
+                <blockquote class="text-xl sm:text-2xl font-semibold text-slate-900 italic">
+                    "Automation helps find signals. Manual verification determines what actually matters."
+                </blockquote>
+                <p class="mt-2 text-xs font-mono text-blue-700 uppercase tracking-widest">— Ashish Ranjan</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Assessment Offer Section -->
+    <section id="services" class="py-24 bg-white border-y border-slate-200 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Commercial Model
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    A No-Risk Security Assessment Model
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Professional, authorized security assessments where scope and rules of engagement are agreed in writing before testing begins.
+                </p>
+            </div>
+
+            <!-- Phase Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-slate-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 font-mono font-bold">1</div>
+                        <h3 class="text-lg font-bold text-slate-900">Before Testing</h3>
+                    </div>
+                    <ul class="space-y-2.5 text-sm text-slate-600 font-mono">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600"></i> Written authorization</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600"></i> Target confirmation</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600"></i> Scope definition</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600"></i> Testing window</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600"></i> Allowed techniques & exclusions</li>
+                    </ul>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-slate-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-cyan-50 flex items-center justify-center text-cyan-600 font-mono font-bold">2</div>
+                        <h3 class="text-lg font-bold text-slate-900">During Testing</h3>
+                    </div>
+                    <ul class="space-y-2.5 text-sm text-slate-600 font-mono">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-600"></i> Automated assessment</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-600"></i> Manual verification</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-600"></i> Evidence collection</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-600"></i> Impact validation</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-600"></i> Safe execution protocols</li>
+                    </ul>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-slate-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 font-mono font-bold">3</div>
+                        <h3 class="text-lg font-bold text-slate-900">After Testing</h3>
+                    </div>
+                    <ul class="space-y-2.5 text-sm text-slate-600 font-mono">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-600"></i> Verified findings</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-600"></i> Severity assessment</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-600"></i> Reproduction steps</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-600"></i> Remediation guidance</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-600"></i> Professional report</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- No Finding = No Fee Guarantee Banner -->
+            <div class="max-w-4xl mx-auto relative overflow-hidden rounded-3xl shadow-2xl">
+                <!-- Background gradient -->
+                <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900"></div>
+                <!-- Glow effects -->
+                <div class="absolute top-0 left-1/4 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px] pointer-events-none"></div>
+                <div class="absolute bottom-0 right-1/4 w-64 h-64 bg-cyan-500/15 rounded-full blur-[80px] pointer-events-none"></div>
+
+                <div class="relative z-10 p-10 sm:p-14 text-center space-y-6">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-mono uppercase tracking-widest">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Zero-Risk Guarantee
+                    </div>
+
+                    <!-- Main Headline -->
+                    <div class="space-y-2">
+                        <h3 class="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
+                            No Finding.
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">No Fee.</span>
+                        </h3>
+                        <p class="text-slate-400 text-sm font-mono uppercase tracking-widest">Simple. Fair. Transparent.</p>
+                    </div>
+
+                    <!-- Two columns -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto text-left pt-2">
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-2">
+                            <div class="flex items-center gap-2 text-slate-400 font-mono text-xs uppercase tracking-wider">
+                                <i data-lucide="x-circle" class="w-4 h-4 text-slate-500"></i> No Vulnerability Found
+                            </div>
+                            <p class="text-2xl font-black text-white">₹0</p>
+                            <p class="text-slate-400 text-sm">You pay absolutely nothing. Zero. No charges, no retainer.</p>
+                        </div>
+                        <div class="bg-blue-500/10 border border-blue-400/20 rounded-2xl p-5 space-y-2">
+                            <div class="flex items-center gap-2 text-blue-300 font-mono text-xs uppercase tracking-wider">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-blue-400"></i> Vulnerability Confirmed
+                            </div>
+                            <p class="text-2xl font-black text-white">Pay on Results</p>
+                            <p class="text-slate-400 text-sm">Charged only on verified, reproducible findings per agreed terms.</p>
+                        </div>
+                    </div>
+
+                    <!-- Fine print -->
+                    <p class="text-slate-500 text-xs font-mono max-w-lg mx-auto">
+                        All assessments require written authorization before testing begins. Scope, targets, and rules of engagement are agreed in advance.
+                    </p>
+
+                    <!-- CTA -->
+                    <div class="pt-2">
+                        <button onclick="openAssessmentModal()" class="px-10 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-base transition-all shadow-lg shadow-blue-600/30 inline-flex items-center gap-2 group">
+                            Start a Risk-Free Assessment
+                            <i data-lucide="arrow-right" class="w-5 h-5 transition-transform group-hover:translate-x-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VAPT Capabilities Grid -->
+    <section class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="layers" class="w-3.5 h-3.5"></i> Technical Scope
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    VAPT Capabilities
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Thorough coverage across modern application stacks, APIs, and cloud infrastructure.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Web Application Security -->
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-white">
+                    <div class="flex items-center space-x-3 text-blue-600">
+                        <i data-lucide="globe" class="w-6 h-6"></i>
+                        <h3 class="text-lg font-bold text-slate-900">Web App Security</h3>
+                    </div>
+                    <ul class="space-y-2 text-xs font-mono text-slate-600">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Authentication & Session Management</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Authorization & Access Control</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> XSS, SQLi & SSRF</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> CSRF & CORS Misconfigurations</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Business Logic Vulnerabilities</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Insecure File Uploads</li>
+                    </ul>
+                </div>
+
+                <!-- API Security -->
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-white">
+                    <div class="flex items-center space-x-3 text-cyan-600">
+                        <i data-lucide="cpu" class="w-6 h-6"></i>
+                        <h3 class="text-lg font-bold text-slate-900">API Security</h3>
+                    </div>
+                    <ul class="space-y-2 text-xs font-mono text-slate-600">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-cyan-600"></span> BOLA & IDOR (OWASP API Top 10)</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-cyan-600"></span> Broken Authentication</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-cyan-600"></span> Excessive Data Exposure</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-cyan-600"></span> Rate Limiting & Brute Force</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-cyan-600"></span> Mass Assignment & Parameter Pollution</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-cyan-600"></span> JWT & OAuth Flaws</li>
+                    </ul>
+                </div>
+
+                <!-- Infrastructure & Recon -->
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-white">
+                    <div class="flex items-center space-x-3 text-purple-600">
+                        <i data-lucide="radar" class="w-6 h-6"></i>
+                        <h3 class="text-lg font-bold text-slate-900">Infra & Recon</h3>
+                    </div>
+                    <ul class="space-y-2 text-xs font-mono text-slate-600">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span> Port & Service Enumeration</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span> DNS Records & Zone Transfers</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span> SSL/TLS Cipher Suite Analysis</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span> HTTP Security Headers Audit</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span> Subdomain Takeover Detection</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span> Technology Fingerprinting</li>
+                    </ul>
+                </div>
+
+                <!-- Security Intelligence -->
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-white">
+                    <div class="flex items-center space-x-3 text-indigo-600">
+                        <i data-lucide="file-search" class="w-6 h-6"></i>
+                        <h3 class="text-lg font-bold text-slate-900">Security Intelligence</h3>
+                    </div>
+                    <ul class="space-y-2 text-xs font-mono text-slate-600">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span> CVE Correlation & NVD Feeds</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span> CVSS v3.1 Severity Scoring</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span> MITRE ATT&CK Mapping</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span> Threat Analysis & Modeling</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span> Remediation Verification</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span> Executive Summary Briefings</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 bg-white border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="code" class="w-3.5 h-3.5"></i> Open Source & Tools
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Security Projects & Builders
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Open-source security automation tools and platforms built to solve real-world offensive security challenges.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <!-- Project 1: VulnSage -->
+                <div class="enterprise-card p-8 rounded-2xl space-y-4 flex flex-col justify-between bg-slate-50">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">Flagship Platform</span>
+                            <span class="text-xs font-mono text-slate-500">Python / Flask / LLMs</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">VulnSage</h3>
+                        <p class="text-sm text-slate-600 font-normal">
+                            <strong class="text-slate-800">Problem:</strong> Security assessments suffer from repetitive reconnaissance and siloed scanning tools.<br/>
+                            <strong class="text-slate-800">What I built:</strong> An AI-powered VAPT platform integrating automated recon, vulnerability discovery, CVE correlation, and manual verification workflows.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">Automated Recon</span>
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">CVE Correlation</span>
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">AI Security Analysis</span>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+                        <span class="text-xs font-mono text-blue-600">Security Purpose: Streamline VAPT delivery</span>
+                        <a href="https://github.com/ashishranjanxyz/VulnSage" target="_blank" class="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-900 hover:text-blue-600 transition-colors">
+                            View on GitHub <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 2: NetSentinel -->
+                <div class="enterprise-card p-8 rounded-2xl space-y-4 flex flex-col justify-between bg-slate-50">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200">Network Scanner</span>
+                            <span class="text-xs font-mono text-slate-500">Python / Nmap / AsyncIO</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">NetSentinel</h3>
+                        <p class="text-sm text-slate-600 font-normal">
+                            <strong class="text-slate-800">Problem:</strong> Network vulnerability identification is often slow and generates overwhelming false positives.<br/>
+                            <strong class="text-slate-800">What I built:</strong> An AI-powered network vulnerability scanner optimized for rapid service fingerprinting and risk correlation.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">Port Enumeration</span>
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">Service Fingerprinting</span>
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">Async Scans</span>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+                        <span class="text-xs font-mono text-cyan-600">Security Purpose: Infra risk visibility</span>
+                        <a href="https://github.com/ashishranjanxyz/NetSentinel-Final" target="_blank" class="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-900 hover:text-cyan-600 transition-colors">
+                            View on GitHub <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 3: ReconGraph -->
+                <div class="enterprise-card p-8 rounded-2xl space-y-4 flex flex-col justify-between bg-slate-50">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200">Reconnaissance</span>
+                            <span class="text-xs font-mono text-slate-500">JavaScript / D3.js / REST API</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">ReconGraph</h3>
+                        <p class="text-sm text-slate-600 font-normal">
+                            <strong class="text-slate-800">Problem:</strong> Attack surface maps are difficult to comprehend in flat text or list formats.<br/>
+                            <strong class="text-slate-800">What I built:</strong> A security reconnaissance and attack-surface visualization tool mapping relationships between domains, subdomains, and endpoints.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">Attack Surface Mapping</span>
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">Graph Vis</span>
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">Subdomain Discovery</span>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+                        <span class="text-xs font-mono text-purple-600">Security Purpose: Attack surface intelligence</span>
+                        <a href="https://github.com/ashishranjanxyz/ReconGraph" target="_blank" class="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-900 hover:text-purple-600 transition-colors">
+                            View on GitHub <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 4: Pentest Agent -->
+                <div class="enterprise-card p-8 rounded-2xl space-y-4 flex flex-col justify-between bg-slate-50">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">Security Automation</span>
+                            <span class="text-xs font-mono text-slate-500">Python / LLMs / Agentic Workflows</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">Pentest Agent</h3>
+                        <p class="text-sm text-slate-600 font-normal">
+                            <strong class="text-slate-800">Problem:</strong> Manual enumeration tasks consume hours of time during preliminary penetration testing phases.<br/>
+                            <strong class="text-slate-800">What I built:</strong> An AI-assisted penetration testing agent designed to suggest fuzzing vectors and validate API response anomalies safely.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">Security Automation</span>
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">AI Analysis</span>
+                            <span class="text-[11px] font-mono px-2 py-1 bg-white rounded border border-slate-200 text-slate-700">Workflow Copilot</span>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+                        <span class="text-xs font-mono text-indigo-600">Security Purpose: AI-assisted pentesting</span>
+                        <a href="https://github.com/ashishranjanxyz/pentest_agent" target="_blank" class="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-900 hover:text-indigo-600 transition-colors">
+                            View on GitHub <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="https://github.com/ashishranjanxyz" target="_blank" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-slate-100 border border-slate-300 text-slate-800 font-semibold hover:border-blue-600 transition-all text-sm">
+                    <i data-lucide="github" class="w-4 h-4"></i> View All Repositories on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Research & Findings Section -->
+    <section id="research" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> Research & Case Studies
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Security Research & Findings
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Focusing on access control vulnerabilities, authentication/authorization issues, API security, business logic flaws, and configuration issues.
+                </p>
+            </div>
+
+            <!-- Case Studies Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <!-- Case Study 1 -->
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-white">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-mono px-2.5 py-1 rounded bg-blue-50 text-blue-700 border border-blue-200">Authorized Assessment</span>
+                        <span class="text-xs font-mono text-rose-600 font-bold">CVSS 8.6 (High)</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Multi-Tenant BOLA in SaaS API Endpoint</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Identified a Broken Object Level Authorization (BOLA) flaw in user organization resource endpoints allowing horizontal privilege escalation across tenant boundaries.
+                    </p>
+                    <div class="pt-2 border-t border-slate-100 text-[11px] font-mono text-slate-500 space-y-1">
+                        <div><strong class="text-slate-700">Category:</strong> API Security / IDOR</div>
+                        <div><strong class="text-slate-700">Status:</strong> Remediated & Verified</div>
+                    </div>
+                </div>
+
+                <!-- Case Study 2 -->
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-white">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-mono px-2.5 py-1 rounded bg-cyan-50 text-cyan-700 border border-cyan-200">Responsible Disclosure</span>
+                        <span class="text-xs font-mono text-amber-600 font-bold">CVSS 7.5 (High)</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">OAuth2 State Parameter Bypass & Account Takeover</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Discovered an improper implementation of the OAuth2 authorization code flow lacking mandatory state validation, exposing users to Cross-Site Request Forgery (CSRF).
+                    </p>
+                    <div class="pt-2 border-t border-slate-100 text-[11px] font-mono text-slate-500 space-y-1">
+                        <div><strong class="text-slate-700">Category:</strong> Authentication Flaw</div>
+                        <div><strong class="text-slate-700">Status:</strong> Disclosed & Patched</div>
+                    </div>
+                </div>
+
+                <!-- Case Study 3 -->
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-white">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-mono px-2.5 py-1 rounded bg-purple-50 text-purple-700 border border-purple-200">Lab Research</span>
+                        <span class="text-xs font-mono text-amber-500 font-bold">CVSS 6.8 (Medium)</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Business Logic Flaw in Discount Coupon Fuzzing</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Analyzed a race condition in e-commerce checkout logic where parallel asynchronous coupon application requests bypassed single-use restrictions.
+                    </p>
+                    <div class="pt-2 border-t border-slate-100 text-[11px] font-mono text-slate-500 space-y-1">
+                        <div><strong class="text-slate-700">Category:</strong> Business Logic / Race Condition</div>
+                        <div><strong class="text-slate-700">Status:</strong> Documented in Test Suite</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Sample Preview Component -->
+            <div class="enterprise-card rounded-2xl p-8 border border-blue-300 shadow-xl bg-white">
+                <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-slate-200">
+                    <div class="space-y-2">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Redacted Report Sample
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">See What a Security Finding Looks Like</h3>
+                        <p class="text-sm text-slate-500">Sample excerpt from an actual evidence-driven security assessment report generated by VulnSage.</p>
+                    </div>
+                    <button onclick="openReportModal()" class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all flex items-center gap-2 shadow-md shadow-blue-600/20">
+                        View Sample Report <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 font-mono text-xs">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <div class="text-blue-700 font-bold flex items-center justify-between">
+                            <span>[FINDING-01] Broken Object Level Authorization</span>
+                            <span class="text-rose-600">CVSS: 8.6 (HIGH)</span>
+                        </div>
+                        <p class="text-slate-700"><strong>Affected Asset:</strong> <code class="text-cyan-600">/api/v1/organizations/{id}/settings</code></p>
+                        <p class="text-slate-500"><strong>Description:</strong> API endpoint fails to validate whether the authenticated user context possesses administrative rights over the requested organization ID.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <div class="text-cyan-700 font-bold flex items-center justify-between">
+                            <span>Remediation & Verification</span>
+                            <span class="text-blue-600">Manual Check: PASSED</span>
+                        </div>
+                        <p class="text-slate-700"><strong>Impact:</strong> Unauthorized data exfiltration and administrative configuration tampering across multi-tenant boundaries.</p>
+                        <p class="text-slate-500"><strong>Remediation:</strong> Implement server-side session-to-organization authorization checks prior to executing database queries.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section class="py-20 bg-white border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5"></i> Technology & Stack
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Tools & Technologies
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Battle-tested security tooling and development stack used for assessments and platform development.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Security Tools -->
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-slate-50">
+                    <div class="flex items-center space-x-3 text-blue-600">
+                        <i data-lucide="shield" class="w-5 h-5"></i>
+                        <h3 class="text-lg font-bold text-slate-900">Security Tooling</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">Nmap</span>
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">Nuclei</span>
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">OWASP Methodology</span>
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">CVE/NVD Intelligence</span>
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">Burp Suite</span>
+                    </div>
+                </div>
+
+                <!-- Development Stack -->
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-slate-50">
+                    <div class="flex items-center space-x-3 text-cyan-600">
+                        <i data-lucide="code" class="w-5 h-5"></i>
+                        <h3 class="text-lg font-bold text-slate-900">Development</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">Python</span>
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">Flask</span>
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">JavaScript</span>
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">HTML / CSS</span>
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">REST APIs</span>
+                    </div>
+                </div>
+
+                <!-- AI & Machine Learning -->
+                <div class="enterprise-card p-6 rounded-2xl space-y-4 bg-slate-50">
+                    <div class="flex items-center space-x-3 text-purple-600">
+                        <i data-lucide="bot" class="w-5 h-5"></i>
+                        <h3 class="text-lg font-bold text-slate-900">AI & Automation</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">LLMs</span>
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">AI Security Analysis</span>
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">Machine Learning</span>
+                        <span class="px-3 py-1 rounded bg-white border border-slate-200 text-xs font-mono text-slate-700">Prompt Engineering</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="award" class="w-3.5 h-3.5"></i> Track Record
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Achievements & Research
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Verified achievements in offensive security, CTF rankings, and platform development.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">VAPT Practitioner</h3>
+                    <p class="text-sm text-slate-500">
+                        Extensive hands-on experience in vulnerability assessment, penetration testing, and remediation verification for web and API architectures.
+                    </p>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center text-cyan-600">
+                        <i data-lucide="cpu" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">VulnSage Builder</h3>
+                    <p class="text-sm text-slate-500">
+                        Designed and built VulnSage, an integrated AI-powered VAPT platform bridging automated recon with manual verification.
+                    </p>
+                </div>
+
+                <div class="enterprise-card p-6 rounded-2xl space-y-3 bg-white">
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+                        <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">AI & ML Background</h3>
+                    <p class="text-sm text-slate-500">
+                        B.Tech in Artificial Intelligence & Machine Learning, applying intelligent heuristic correlation to modern cybersecurity challenges.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact / Lead Generation Section -->
+    <section id="contact" class="py-24 bg-white border-t border-slate-200 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="mail" class="w-3.5 h-3.5"></i> Get in Touch
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Have an Application You Want Security Tested?
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Tell me what you're building. I'll help determine whether a security assessment makes sense.
+                </p>
+            </div>
+
+            <!-- Contact Form Card (Streamlined with Name, Email, Phone only + WhatsApp note) -->
+            <div class="enterprise-card rounded-2xl p-8 sm:p-12 border border-slate-200 shadow-2xl relative bg-slate-50">
+                
+                <!-- WhatsApp Quick Response Banner -->
+                <div class="mb-8 p-4 rounded-xl bg-blue-50 border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-lg shadow-md">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-slate-900">Need an immediate discussion?</div>
+                            <div class="text-xs text-slate-600">For quick response, WhatsApp me at <a href="https://wa.me/916203521505" target="_blank" class="text-blue-600 font-bold hover:underline">+91 62035 21505</a></div>
+                        </div>
+                    </div>
+                    <a href="https://wa.me/916203521505" target="_blank" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-md">
+                        <i data-lucide="message-square" class="w-4 h-4"></i> WhatsApp Now
+                    </a>
+                </div>
+
+                <form id="assessment-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                    <div>
+                        <label class="block text-xs font-mono text-slate-700 uppercase tracking-wider mb-2">Your Name *</label>
+                        <input type="text" id="name" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 transition-colors shadow-sm" placeholder="Alex Turner">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-slate-700 uppercase tracking-wider mb-2">Email Address *</label>
+                        <input type="email" id="email" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 transition-colors shadow-sm" placeholder="alex@company.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-slate-700 uppercase tracking-wider mb-2">Phone Number *</label>
+                        <input type="tel" id="phone" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 transition-colors shadow-sm" placeholder="+91 98765 43210">
+                    </div>
+
+                    <button type="submit" class="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-all shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2">
+                        Request Security Assessment <i data-lucide="send" class="w-5 h-5"></i>
+                    </button>
+                </form>
+
+                <!-- Success Confirmation State (Hidden by default) -->
+                <div id="form-success" class="hidden text-center py-12 space-y-4">
+                    <div class="w-16 h-16 bg-blue-50 border border-blue-200 text-blue-600 rounded-full flex items-center justify-center mx-auto shadow-md">
+                        <i data-lucide="check-circle" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900">Request Received Successfully</h3>
+                    <p class="text-slate-600 max-w-md mx-auto text-sm">
+                        Thanks — your request has been received. I'll review your details and get back to you shortly.
+                    </p>
+                    <div class="pt-4">
+                        <a href="https://wa.me/916203521505" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md mb-3">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i> Or message directly on WhatsApp (+91 62035 21505)
+                        </a>
+                        <br/>
+                        <button onclick="resetForm()" class="px-6 py-2 rounded-xl bg-white border border-slate-300 text-slate-700 text-xs font-mono hover:border-blue-600 shadow-sm">
+                            Submit Another Request
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Socials & Direct Links -->
+                <div class="mt-12 pt-8 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-sm font-mono text-slate-500">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="phone" class="w-4 h-4 text-blue-600"></i>
+                        <span>WhatsApp: +91 62035 21505</span>
+                    </div>
+                    <div class="flex items-center space-x-6">
+                        <a href="https://linkedin.com/in/ashishranjanxyz" target="_blank" class="hover:text-blue-600 transition-colors flex items-center gap-1.5"><i data-lucide="linkedin" class="w-4 h-4"></i> LinkedIn</a>
+                        <a href="https://github.com/ashishranjanxyz" target="_blank" class="hover:text-blue-600 transition-colors flex items-center gap-1.5"><i data-lucide="github" class="w-4 h-4"></i> GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-slate-900 text-slate-400 text-xs font-mono border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm">AR</div>
+                <div>
+                    <span class="text-white font-sans font-semibold">Ashish Ranjan</span>
+                    <p class="text-slate-400">© 2026 Ashish Ranjan. All rights reserved. Authorized security testing only.</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-6">
+                <a href="#home" class="hover:text-white transition-colors">Home</a>
+                <a href="#vulnsage" class="hover:text-white transition-colors">VulnSage</a>
+                <a href="#services" class="hover:text-white transition-colors">Services</a>
+                <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+                <a href="https://linkedin.com/in/ashishranjanxyz" target="_blank" class="hover:text-white transition-colors flex items-center gap-1"><i data-lucide="linkedin" class="w-3.5 h-3.5"></i></a>
+                <a href="https://github.com/ashishranjanxyz" target="_blank" class="hover:text-white transition-colors flex items-center gap-1"><i data-lucide="github" class="w-3.5 h-3.5"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+
+    <!-- Assessment Request Modal -->
+    <div id="assessment-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden p-4 overflow-y-auto">
+        <div class="enterprise-card max-w-lg w-full rounded-2xl p-6 sm:p-8 border border-blue-300 relative max-h-[90vh] overflow-y-auto bg-white shadow-2xl">
+            <button onclick="closeAssessmentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-900 p-1">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="space-y-4 mb-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Security Assessment Inquiry
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900">Request a Security Assessment</h3>
+                <p class="text-xs text-slate-500">Provide your contact details or message me directly on WhatsApp at <strong class="text-slate-900">+91 62035 21505</strong>.</p>
+            </div>
+            <form onsubmit="handleModalFormSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-mono text-slate-700 uppercase mb-1">Your Name *</label>
+                    <input type="text" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-slate-900 text-sm focus:border-blue-600 outline-none" placeholder="Alex Turner">
+                </div>
+                <div>
+                    <label class="block text-xs font-mono text-slate-700 uppercase mb-1">Email Address *</label>
+                    <input type="email" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-slate-900 text-sm focus:border-blue-600 outline-none" placeholder="alex@company.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-mono text-slate-700 uppercase mb-1">Phone Number *</label>
+                    <input type="tel" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-slate-900 text-sm focus:border-blue-600 outline-none" placeholder="+91 98765 43210">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md">
+                    Submit Assessment Request
+                </button>
+                <div class="text-center pt-2">
+                    <a href="https://wa.me/916203521505" target="_blank" class="text-xs text-emerald-600 font-mono font-bold hover:underline flex items-center justify-center gap-1.5">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i> Or quick WhatsApp chat: +91 62035 21505
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- VulnSage Demo Modal -->
+    <div id="vulnsage-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden p-4 overflow-y-auto">
+        <div class="enterprise-card max-w-2xl w-full rounded-2xl p-6 sm:p-8 border border-blue-300 relative max-h-[90vh] overflow-y-auto bg-white shadow-2xl">
+            <button onclick="closeVulnSageModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-900 p-1">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="space-y-4 mb-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="shield" class="w-3.5 h-3.5"></i> VulnSage Architecture
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900">VulnSage AI-Powered VAPT Platform</h3>
+                <p class="text-xs text-slate-500">Overview of components and automated security pipelines.</p>
+            </div>
+            <div class="space-y-4 text-xs font-mono text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <p class="text-blue-600 font-bold">[+] Core Engine Features:</p>
+                <ul class="space-y-2 list-disc list-inside text-slate-600">
+                    <li>Automated target reconnaissance and asset discovery using custom enumeration wrappers.</li>
+                    <li>Vulnerability correlation against NVD and live CVE intelligence feeds.</li>
+                    <li>LLM-powered security analysis for root-cause prioritization.</li>
+                    <li>Human-in-the-loop manual verification workflows to confirm exploitability.</li>
+                </ul>
+                <div class="pt-3 border-t border-slate-200 flex justify-between items-center">
+                    <span class="text-cyan-600">Status: Active Development & Deployment</span>
+                    <button onclick="closeVulnSageModal(); openAssessmentModal();" class="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">Request Demo Access</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample Report Modal -->
+    <div id="report-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden p-4 overflow-y-auto">
+        <div class="enterprise-card max-w-3xl w-full rounded-2xl p-6 sm:p-8 border border-blue-300 relative max-h-[90vh] overflow-y-auto bg-white shadow-2xl">
+            <button onclick="closeReportModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-900 p-1">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="space-y-4 mb-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200">
+                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Security Finding Specimen
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900">Redacted Security Assessment Report</h3>
+            </div>
+            <div class="space-y-4 text-xs font-mono text-slate-700 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-200">
+                    <span class="text-blue-700 font-bold">FINDING ID: VULN-2026-089</span>
+                    <span class="px-2 py-0.5 rounded bg-rose-50 text-rose-600 border border-rose-200">CVSS v3.1: 8.6 (High)</span>
+                </div>
+                <div>
+                    <p class="text-slate-400 uppercase tracking-widest text-[10px]">Affected Asset</p>
+                    <p class="text-cyan-600 mt-1">https://api.redacted-target.sec/v1/organizations/{id}/settings</p>
+                </div>
+                <div>
+                    <p class="text-slate-400 uppercase tracking-widest text-[10px]">Description</p>
+                    <p class="text-slate-600 mt-1 leading-relaxed">The API endpoint lacks proper object-level authorization checks. Any authenticated low-privilege user can modify organization settings by supplying another tenant's organization ID in the request path.</p>
+                </div>
+                <div>
+                    <p class="text-slate-400 uppercase tracking-widest text-[10px]">Proof of Concept</p>
+                    <pre class="bg-slate-900 text-slate-200 p-3 rounded text-[11px] overflow-x-auto mt-1">
+GET /v1/organizations/org_9921/settings HTTP/1.1
+Host: api.redacted-target.sec
+Authorization: Bearer eyJhbGciOi... (Low Priv User)
+                    </pre>
+                </div>
+                <div>
+                    <p class="text-slate-400 uppercase tracking-widest text-[10px]">Remediation</p>
+                    <p class="text-slate-600 mt-1 leading-relaxed">Validate session ownership inside middleware before processing database updates.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Interactivity -->
+    <script>
+        lucide.createIcons();
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Modal triggers
+        function openAssessmentModal() {
+            document.getElementById('assessment-modal').classList.remove('hidden');
+        }
+        function closeAssessmentModal() {
+            document.getElementById('assessment-modal').classList.add('hidden');
+        }
+
+        function openVulnSageModal() {
+            document.getElementById('vulnsage-modal').classList.remove('hidden');
+        }
+        function closeVulnSageModal() {
+            document.getElementById('vulnsage-modal').classList.add('hidden');
+        }
+
+        function openReportModal() {
+            document.getElementById('report-modal').classList.remove('hidden');
+        }
+        function closeReportModal() {
+            document.getElementById('report-modal').classList.add('hidden');
+        }
+
+        // ── Live terminal ticker: typewriter + multi-line scroll ──────────────
+        const tickerMessages = [
+            "[+] Initializing VulnSage recon engine v2.4...",
+            "[+] Resolving subdomains via crt.sh & assetfinder...",
+            "[✓] Found 38 subdomains. Filtering live hosts...",
+            "[+] Running nuclei templates on 44 web endpoints...",
+            "[!] Potential IDOR detected on /api/v1/organizations/{id}",
+            "[+] Correlating findings with NVD CVE database...",
+            "[✓] CVE-2024-3891 matched — CVSS 7.8 (High)",
+            "[+] Validating OAuth2 state parameter implementation...",
+            "[!] Missing state validation → CSRF risk confirmed",
+            "[+] Manual verification: reproducing in clean session...",
+            "[✓] BOLA confirmed — unauthorized org data accessible",
+            "[+] Generating CVSS v3.1 severity scores...",
+            "[✓] Reconnaissance cycle complete. 0 false positives.",
+            "[+] Compiling executive & technical report...",
+        ];
+        let tickerIdx = 0;
+        let charIdx = 0;
+        let currentText = "";
+        let isDeleting = false;
+        const tickerEl = document.getElementById('terminal-ticker');
+
+        function typewriterTick() {
+            const target = tickerMessages[tickerIdx];
+            if (!isDeleting) {
+                currentText = target.substring(0, charIdx + 1);
+                charIdx++;
+                if (charIdx === target.length) {
+                    isDeleting = false;
+                    setTimeout(() => { isDeleting = true; typewriterTick(); }, 2200);
+                    return;
+                }
+            } else {
+                currentText = target.substring(0, charIdx - 1);
+                charIdx--;
+                if (charIdx === 0) {
+                    isDeleting = false;
+                    tickerIdx = (tickerIdx + 1) % tickerMessages.length;
+                }
+            }
+            if (tickerEl) {
+                const color = currentText.startsWith('[✓]') ? 'text-emerald-400' :
+                              currentText.startsWith('[!]') ? 'text-amber-400' : 'text-slate-300';
+                tickerEl.innerHTML = `<p class="${color}">${currentText}<span class="animate-pulse text-blue-400">▋</span></p>`;
+            }
+            setTimeout(typewriterTick, isDeleting ? 30 : 55);
+        }
+        typewriterTick();
+
+        // ── Scroll-reveal animations ──────────────────────────────────────────
+        const revealStyle = document.createElement('style');
+        revealStyle.textContent = `
+            .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.55s ease, transform 0.55s ease; }
+            .reveal.visible { opacity: 1; transform: translateY(0); }
+        `;
+        document.head.appendChild(revealStyle);
+
+        document.querySelectorAll('.enterprise-card, section h2, section p, .grid > div').forEach((el, i) => {
+            el.classList.add('reveal');
+            el.style.transitionDelay = `${(i % 4) * 60}ms`;
+        });
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Contact form handling with validation & success state
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            
+            if(!email.includes('@') || !email.includes('.')) {
+                alert('Please enter a valid work email address.');
+                return;
+            }
+            if(!phone || phone.length < 8) {
+                alert('Please enter a valid phone number.');
+                return;
+            }
+
+            // Hide form, show success
+            document.getElementById('assessment-form').classList.add('hidden');
+            document.getElementById('form-success').classList.remove('hidden');
+        }
+
+        function handleModalFormSubmit(event) {
+            event.preventDefault();
+            alert("Thanks — your assessment request has been received. I'll review your details and get back to you shortly.");
+            closeAssessmentModal();
+        }
+
+        function resetForm() {
+            document.getElementById('assessment-form').reset();
+            document.getElementById('assessment-form').classList.remove('hidden');
+            document.getElementById('form-success').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
