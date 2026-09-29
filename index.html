@@ -1316,22 +1316,33 @@
                 </div>
 
                 <form id="assessment-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                    <!-- Web3Forms hidden fields -->
+                    <input type="hidden" name="access_key" value="8bddc319-a151-4cfe-8b6f-dc80f7840855">
+                    <input type="hidden" name="subject" value="New Security Assessment Request — Portfolio">
+                    <input type="hidden" name="from_name" value="Portfolio Contact Form">
+                    <input type="checkbox" name="botcheck" class="hidden" style="display:none">
+
                     <div>
                         <label class="block text-xs font-mono text-slate-700 uppercase tracking-wider mb-2">Your Name *</label>
-                        <input type="text" id="name" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 transition-colors shadow-sm" placeholder="Alex Turner">
+                        <input type="text" id="name" name="name" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 transition-colors shadow-sm" placeholder="Alex Turner">
                     </div>
 
                     <div>
                         <label class="block text-xs font-mono text-slate-700 uppercase tracking-wider mb-2">Email Address *</label>
-                        <input type="email" id="email" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 transition-colors shadow-sm" placeholder="alex@company.com">
+                        <input type="email" id="email" name="email" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 transition-colors shadow-sm" placeholder="alex@company.com">
                     </div>
 
                     <div>
                         <label class="block text-xs font-mono text-slate-700 uppercase tracking-wider mb-2">Phone Number *</label>
-                        <input type="tel" id="phone" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 transition-colors shadow-sm" placeholder="+91 98765 43210">
+                        <input type="tel" id="phone" name="phone" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 transition-colors shadow-sm" placeholder="+91 98765 43210">
                     </div>
 
-                    <button type="submit" class="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-all shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2">
+                    <div>
+                        <label class="block text-xs font-mono text-slate-700 uppercase tracking-wider mb-2">What do you want tested? (Optional)</label>
+                        <textarea name="message" rows="3" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 transition-colors shadow-sm resize-none" placeholder="e.g. Web app, API, login system..."></textarea>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-all shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2">
                         Request Security Assessment <i data-lucide="send" class="w-5 h-5"></i>
                     </button>
                 </form>
@@ -1603,24 +1614,47 @@ Authorization: Bearer eyJhbGciOi... (Low Priv User)
 
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-        // Contact form handling with validation & success state
-        function handleFormSubmit(event) {
+        // ── Contact form — Web3Forms real submission ──────────────────────────
+        async function handleFormSubmit(event) {
             event.preventDefault();
+            const form = document.getElementById('assessment-form');
+            const btn  = document.getElementById('submit-btn');
+
+            // Basic validation
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
-            
-            if(!email.includes('@') || !email.includes('.')) {
-                alert('Please enter a valid work email address.');
-                return;
+            if (!email.includes('@') || !email.includes('.')) {
+                alert('Please enter a valid email address.'); return;
             }
-            if(!phone || phone.length < 8) {
-                alert('Please enter a valid phone number.');
-                return;
+            if (!phone || phone.length < 8) {
+                alert('Please enter a valid phone number.'); return;
             }
 
-            // Hide form, show success
-            document.getElementById('assessment-form').classList.add('hidden');
-            document.getElementById('form-success').classList.remove('hidden');
+            // Loading state
+            btn.disabled = true;
+            btn.innerHTML = `<svg class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg> Sending...`;
+
+            try {
+                const formData = new FormData(form);
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    // Show success state
+                    form.classList.add('hidden');
+                    document.getElementById('form-success').classList.remove('hidden');
+                } else {
+                    throw new Error(data.message || 'Submission failed');
+                }
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerHTML = `Request Security Assessment <i data-lucide="send" class="w-5 h-5"></i>`;
+                lucide.createIcons();
+                alert('Something went wrong. Please try WhatsApp: +91 62035 21505');
+            }
         }
 
         function handleModalFormSubmit(event) {
@@ -1633,6 +1667,12 @@ Authorization: Bearer eyJhbGciOi... (Low Priv User)
             document.getElementById('assessment-form').reset();
             document.getElementById('assessment-form').classList.remove('hidden');
             document.getElementById('form-success').classList.add('hidden');
+            const btn = document.getElementById('submit-btn');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = `Request Security Assessment <i data-lucide="send" class="w-5 h-5"></i>`;
+                lucide.createIcons();
+            }
         }
     </script>
 </body>
